@@ -1,0 +1,16 @@
+services:
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DB_NAME:-secreto}
+      MARIADB_USER: ${DB_USER:-secreto_user}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-supersegura}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpass}
+    ports:
+      - "3307:3306"
+    command: ["--character-set-server=utf8mb4","--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - dbdata:/var/lib/mysql
+volumes:
+  dbdata:
