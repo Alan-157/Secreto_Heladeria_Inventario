@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h3 class="mb-3">Dashboard</h3>
+<div class="row g-3 mb-4" id="kpis"></div>
+
+<h5>Últimos movimientos</h5>
+<div class="table-responsive">
+  <table class="table table-sm" id="tbl-movs">
+    <thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th class="text-end">Cant.</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const [insumos, lotes, alertas, movs] = await Promise.all([
+    SecretoUI.loadJSON("{% static 'mock/insumos.json' %}"),
+    SecretoUI.loadJSON("{% static 'mock/lotes.json' %}"),
+    SecretoUI.loadJSON("{% static 'mock/alertas.json' %}"),
+    SecretoUI.loadJSON("{% static 'mock/movimientos.json' %}")
+  ]);
+
+  const activos = lotes.filter(l => l.cantidad_actual > 0).length;
+  const porVencer = lotes.filter(l => {
+    if (!l.fecha_caducidad) return false;
+    return SecretoUI.caducidadPill(l.fecha_caducidad).includes("bg-danger");
+  }).length;
+  const bajos = insumos.filter(i => i.stock < i.stock_min).length;
+
+  document.getElementById('kpis').innerHTML = `
+    <div class="col-6 col-md-3"><div class="card card-kpi shadow-sm"><div class="card-body">
+      <div class="value">${insumos.length}</div><div class="label">Insumos</div></div></div></div>
+    <div class="col-6 col-md-3"><div class="card card-kpi shadow-sm"><div class="card-body">
+      <div class="value">${activos}</div><div class="label">Lotes activos</div></div></div></div>
+    <div class="col-6 col-md-3"><div class="card card-kpi shadow-sm"><div class="card-body">
+      <div class="value">${porVencer}</div><div class="label">Por vencer (≤15d)</div></div></div></div>
+    <div class="col-6 col-md-3"><div class="card card-kpi shadow-sm"><div class="card-body">
+      <div class="value">${alertas.length}</div><div class="label">Alertas</div></div></div></div>
+  `;
+
+  const tbody = document.querySelector('#tbl-movs tbody');
+  tbody.innerHTML = movs.slice(0, 8).map(m => `
+    <tr>
+      <td>${m.fecha}</td><td>${m.producto}</td>
+      <td>${SecretoUI.tipoMovBadge(m.tipo)}</td>
+      <td class="text-end">${m.cantidad}</td>
+    </tr>`).join("");
+});
+</script>
+{% endblock %}

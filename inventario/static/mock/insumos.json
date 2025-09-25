@@ -1,0 +1,6 @@
+[
+  {"id": 1, "nombre": "Leche entera", "categoria": "Lácteos", "unidad": "lt", "stock": 120, "stock_min": 40},
+  {"id": 2, "nombre": "Azúcar blanca", "categoria": "Endulzantes", "unidad": "kg", "stock": 30, "stock_min": 50},
+  {"id": 3, "nombre": "Frutilla congelada", "categoria": "Fruta", "unidad": "kg", "stock": 15, "stock_min": 10},
+  {"id": 4, "nombre": "Vainilla", "categoria": "Esencias", "unidad": "ml", "stock": 800, "stock_min": 200}
+]

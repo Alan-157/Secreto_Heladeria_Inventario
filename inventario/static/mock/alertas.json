@@ -1,0 +1,4 @@
+[
+  {"id": 1, "tipo": "STOCK_BAJO", "insumo": "Azúcar blanca", "detalle": "Stock 30 < mínimo 50", "severidad": "ALTA"},
+  {"id": 2, "tipo": "CADUCIDAD", "insumo": "Frutilla congelada", "detalle": "Vence en 5 días", "severidad": "MEDIA"}
+]

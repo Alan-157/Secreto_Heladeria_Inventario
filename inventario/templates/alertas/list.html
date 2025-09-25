@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Alertas{% endblock %}
+{% block content %}
+<h3 class="mb-3">Alertas</h3>
+<div class="table-responsive">
+<table class="table table-striped align-middle" id="tbl">
+  <thead><tr><th>ID</th><th>Insumo</th><th>Tipo</th><th>Severidad</th><th>Detalle</th></tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const data = await SecretoUI.loadJSON("{% static 'mock/alertas.json' %}");
+  const tbody = document.querySelector("#tbl tbody");
+  tbody.innerHTML = data.map(a => `
+    <tr>
+      <td>${a.id}</td><td>${a.insumo}</td><td>${a.tipo}</td>
+      <td>${SecretoUI.severidadBadge(a.severidad)}</td>
+      <td>${a.detalle}</td>
+    </tr>`).join("");
+});
+</script>
+{% endblock %}
