@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Movimientos{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Movimientos</h3>
+  <input id="q" class="form-control searchbar" placeholder="Buscar por producto/tipo...">
+</div>
+
+<div class="table-responsive">
+<table class="table table-striped align-middle" id="tbl">
+  <thead><tr><th>ID</th><th>Fecha</th><th>Producto</th><th>Tipo</th><th class="text-end">Cantidad</th><th>Unidad</th></tr></thead>
+  <tbody></tbody>
+</table>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const data = await SecretoUI.loadJSON("{% static 'mock/movimientos.json' %}");
+  const tbody = document.querySelector("#tbl tbody");
+  tbody.innerHTML = data.map(m => `
+    <tr>
+      <td>${m.id}</td><td>${m.fecha}</td><td>${m.producto}</td>
+      <td>${SecretoUI.tipoMovBadge(m.tipo)}</td>
+      <td class="text-end">${m.cantidad}</td><td>${m.unidad}</td>
+    </tr>`).join("");
+  SecretoUI.simpleSearch(document.getElementById('q'), document.getElementById('tbl'));
+});
+</script>
+{% endblock %}

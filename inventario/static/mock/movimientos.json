@@ -1,0 +1,6 @@
+[
+  {"id": 9001, "producto": "Leche entera", "tipo": "ENTRADA", "cantidad": 40, "unidad": "lt", "fecha": "2025-09-23 10:20"},
+  {"id": 9002, "producto": "Azúcar blanca", "tipo": "SALIDA", "cantidad": 5, "unidad": "kg", "fecha": "2025-09-24 12:05"},
+  {"id": 9003, "producto": "Frutilla congelada", "tipo": "SALIDA", "cantidad": 2, "unidad": "kg", "fecha": "2025-09-24 17:45"},
+  {"id": 9004, "producto": "Leche entera", "tipo": "SALIDA", "cantidad": 10, "unidad": "lt", "fecha": "2025-09-25 09:10"}
+]

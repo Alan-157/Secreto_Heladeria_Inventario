@@ -1,0 +1,6 @@
+[
+  {"id": 101, "producto": "Leche entera", "cantidad_actual": 60, "unidad": "lt", "fecha_caducidad": "2025-10-05"},
+  {"id": 102, "producto": "Azúcar blanca", "cantidad_actual": 10, "unidad": "kg", "fecha_caducidad": null},
+  {"id": 103, "producto": "Frutilla congelada", "cantidad_actual": 8, "unidad": "kg", "fecha_caducidad": "2025-09-30"},
+  {"id": 104, "producto": "Vainilla", "cantidad_actual": 500, "unidad": "ml", "fecha_caducidad": "2026-01-15"}
+]
