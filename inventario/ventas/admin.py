@@ -1,3 +1,6 @@
+# ventas/admin.py
 from django.contrib import admin
+from .models import Categoria, Insumo
 
-# Register your models here.
+admin.site.register(Categoria)
+admin.site.register(Insumo)
