@@ -1,28 +1,48 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-class BaseModel(models.Model):
-    ESTADOS = [
-        ("ACTIVO", "Activo"),
-        ("INACTIVO", "Inactivo")
-    ]
+class Usuario(AbstractUser):
+    # AbstractUser ya trae: username, password, first_name, last_name, email, etc.
+    # Forzamos email único porque lo usaremos para recuperar contraseña.
+    id = models.AutoField(primary_key=True)
+    email = models.EmailField(unique=True)
 
-    estado = models.CharField(max_length=10, choices=ESTADOS, default="ACTIVO")
-    created_at = models.DateTimeField(auto_now_add=True)  # se asigna al crear
-    updated_at = models.DateTimeField(auto_now=True)      # se actualiza cada vez que se guarda
-    deleted_at = models.DateTimeField(null=True, blank=True)  # opcional para borrado lógico
+    class Rol(models.TextChoices):
+        ADMIN = "ADMIN", "Administrador"
+        GESTOR = "GESTOR", "Gestor"
+        VISOR = "VISOR", "Visualizador"
 
-class Usuario(BaseModel):
-    nombre = models.CharField(max_length=100)
-    email = models.EmailField(max_length=100, unique=True)
-    password = models.CharField(max_length=100)
-    
-    ROLES = [
-        ("ADMIN", "Administrador"),
-        ("GESTOR", "Gestor"),
-        ("VISOR", "Visualizador")
-    ]
-    rol = models.CharField(max_length=20, choices=ROLES)
+    rol = models.CharField(max_length=20, choices=Rol.choices, default=Rol.GESTOR)
 
     def __str__(self):
-        return f"{self.nombre} ({self.rol})"
+        return f"{self.username} ({self.get_rol_display()})"
 
+
+class UserPerfil(models.Model):
+    nombre = models.CharField(max_length=50, unique=True)
+    descripcion = models.CharField(max_length=150, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "user_perfiles"
+        verbose_name = "Perfil"
+        verbose_name_plural = "Perfiles"
+
+    def __str__(self):
+        return self.nombre
+
+
+class UserPerfilAsignacion(models.Model):
+    usuario = models.ForeignKey("usuarios.Usuario", on_delete=models.CASCADE)
+    perfil  = models.ForeignKey(UserPerfil, on_delete=models.PROTECT)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "user_perfil_asignacion"
+        unique_together = ("usuario", "perfil")
+        verbose_name = "Asignación de perfil"
+        verbose_name_plural = "Asignaciones de perfiles"
+
+    def __str__(self):
+        return f"{self.usuario} → {self.perfil}"
