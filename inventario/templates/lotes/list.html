@@ -1,35 +1,36 @@
 {% extends "base.html" %}
-{% load static %}
 {% block title %}Lotes{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h3>Lotes</h3>
-  <input id="q" class="form-control searchbar" placeholder="Buscar producto...">
-</div>
-
-<div class="table-responsive">
-<table class="table table-striped align-middle" id="tbl">
-  <thead>
-    <tr><th>ID</th><th>Producto</th><th class="text-end">Cantidad</th><th>Unidad</th><th>Caducidad</th></tr>
-  </thead>
-  <tbody></tbody>
-</table>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-  const data = await SecretoUI.loadJSON("{% static 'mock/lotes.json' %}");
-  const tbody = document.querySelector("#tbl tbody");
-  tbody.innerHTML = data.map(l => `
-    <tr>
-      <td>${l.id}</td>
-      <td>${l.producto}</td>
-      <td class="text-end">${l.cantidad_actual}</td>
-      <td>${l.unidad}</td>
-      <td>${SecretoUI.caducidadPill(l.fecha_caducidad)}</td>
-    </tr>
-  `).join("");
-  SecretoUI.simpleSearch(document.getElementById('q'), document.getElementById('tbl'));
-});
-</script>
+<h3 class="mb-3">Lotes</h3>
+{%if messages}
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Producto</th>
+          <th class="text-end">Cantidad</th>
+          <th>Unidad</th>
+          <th>Caducidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in lotes %}
+          <tr>
+            <td>{{ l.id }}</td>
+            <td>{{ l.producto.nombre }}</td>
+            <td class="text-end">{{ l.cantidad_actual }}</td>
+            <td>{{ l.unidad }}</td>
+            <td>{{ l.fecha_caducidad|date:"d/m/Y" }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5" class="text-center text-muted">Sin lotes</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="alert alert-info text-center" role="alert">
+    No hay lotes registrados.
+  </div>
 {% endblock %}

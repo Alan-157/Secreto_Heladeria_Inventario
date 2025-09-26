@@ -1,28 +1,36 @@
 {% extends "base.html" %}
-{% load static %}
 {% block title %}Lotes por vencer{% endblock %}
 {% block content %}
 <h3 class="mb-3">Lotes por vencer (≤ 15 días)</h3>
-<div class="table-responsive">
-<table class="table table-striped align-middle">
-  <thead><tr><th>ID</th><th>Producto</th><th class="text-end">Cant.</th><th>Unidad</th><th>Caducidad</th></tr></thead>
-  <tbody id="tbody"></tbody>
-</table>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-  const data = await SecretoUI.loadJSON("{% static 'mock/lotes.json' %}");
-  const criticos = data.filter(l => {
-    if (!l.fecha_caducidad) return false;
-    return SecretoUI.caducidadPill(l.fecha_caducidad).includes("bg-danger");
-  });
-  document.getElementById('tbody').innerHTML = criticos.map(l => `
-    <tr>
-      <td>${l.id}</td><td>${l.producto}</td>
-      <td class="text-end">${l.cantidad_actual}</td><td>${l.unidad}</td>
-      <td>${SecretoUI.caducidadPill(l.fecha_caducidad)}</td>
-    </tr>`).join("");
-});
-</script>
+{% if lotes %}
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Producto</th>
+          <th class="text-end">Cant.</th>
+          <th>Unidad</th>
+          <th>Caducidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in lotes %}
+          <tr>
+            <td>{{ l.id }}</td>
+            <td>{{ l.producto.nombre }}</td>
+            <td class="text-end">{{ l.cantidad_actual }}</td>
+            <td>{{ l.unidad }}</td>
+            <td>{{ l.fecha_caducidad|date:"d/m/Y" }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5" class="text-center text-muted">Sin lotes por vencer</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="alert alert-info text-center" role="alert">
+    No hay lotes por vencer.
+  </div>
 {% endblock %}
