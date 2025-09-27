@@ -1,3 +1,6 @@
+#Motor de base de datos
+MySQL
+
 # Crear entorno virtual
 python -m venv venv
 source venv/bin/activate  # o .\venv\Scripts\activate en Windows
