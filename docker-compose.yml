@@ -1,16 +1,39 @@
 services:
   db:
     image: mariadb:11
-    restart: unless-stopped
+    container_name: secreto_db
     environment:
-      MARIADB_DATABASE: ${DB_NAME:-secreto}
-      MARIADB_USER: ${DB_USER:-secreto_user}
-      MARIADB_PASSWORD: ${DB_PASSWORD:-supersegura}
-      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpass}
+      MYSQL_DATABASE: secretoinventario
+      MYSQL_USER: secreto
+      MYSQL_PASSWORD: secreto123
+      MYSQL_ROOT_PASSWORD: root
+      TZ: America/Santiago
     ports:
       - "3307:3306"
-    command: ["--character-set-server=utf8mb4","--collation-server=utf8mb4_unicode_ci"]
     volumes:
-      - dbdata:/var/lib/mysql
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb -uroot -p$${MYSQL_ROOT_PASSWORD} -e 'SELECT 1;'"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  web:
+    build: .
+    container_name: secreto_web
+    working_dir: /code/inventario
+    volumes:
+      - ./:/code
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "
+      python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000
+      "
+
 volumes:
-  dbdata:
+  db_data:
