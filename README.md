@@ -28,6 +28,6 @@ docker compose exec web python manage.py createsuperuser
 Usuario: admin
 Clave: admin123
 
-#Acceder con docker
+# Acceder con docker
 Frontend: http://localhost:8000
 Admin de Django: http://localhost:8000/admin/
