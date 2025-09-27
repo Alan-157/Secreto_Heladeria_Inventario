@@ -14,3 +14,13 @@ docker compose exec web python manage.py migrate
 
 # Verificar conexión
 docker compose exec web python manage.py check
+
+# Como cargar las semillas
+docker compose exec web python manage.py seed_inventario
+docker compose exec web python manage.py seed_lacteos
+docker compose exec web python manage.py seed_naranja
+
+# Crear admin
+docker compose exec web python manage.py createsuperuser
+Usuario: admin
+Clave: admin123
