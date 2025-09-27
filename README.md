@@ -27,3 +27,7 @@ docker compose exec web python manage.py seed_naranja
 docker compose exec web python manage.py createsuperuser
 Usuario: admin
 Clave: admin123
+
+#Acceder con docker
+Frontend: http://localhost:8000
+Admin de Django: http://localhost:8000/admin/
